@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GestionBodega {
+    private static ArrayList<Producto> inventario = new ArrayList<>();
     private static ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
@@ -74,8 +75,62 @@ public class GestionBodega {
     }
 
     public static void mostrarMenuBodega() {
-        System.out.println("\n*** MENÚ DE BODEGA ***");
-        // Aquí ponemos las opciones: registrar producto, ver stock y algunas mas 
+        int opcion;
+        do {
+            System.out.println("\n--- GESTIÓN DE BODEGAS ---");
+            System.out.println("1. Ingresar nuevo producto");
+            System.out.println("2. Ver inventario actual");
+            System.out.println("0. Cerrar sesión y volver al menú principal");
+            System.out.print("Elige una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
+
+            switch (opcion) {
+                case 1:
+                    ingresarProducto();
+                    break;
+                case 2:
+                    verInventario();
+                    break;
+                case 0:
+                    System.out.println("Cerrando sesión...");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (opcion != 0);
     }
-    
+    public static void ingresarProducto() {
+        System.out.print("Nombre del producto: ");
+        String nombre = scanner.nextLine();
+
+        System.out.print("Cantidad (ej: 1, 2.5, 2k, 1.5k): ");
+        String entrada = scanner.nextLine().toLowerCase().replace(",", ".");
+
+        double cantidad;
+
+        try {
+            if (entrada.endsWith("k")) {
+                String numStr = entrada.replace("k", "");
+                cantidad = Double.parseDouble(numStr) * 1000;
+            } else {
+                cantidad = Double.parseDouble(entrada);
+            }
+
+            inventario.add(new Producto(nombre, cantidad));
+            System.out.println("Producto agregado correctamente al inventario.");
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Ingresa una cantidad válida como 1, 2.5 o 2k.");
+        }
+    }
+    public static void verInventario() {
+        if (inventario.isEmpty()) {
+            System.out.println("El inventario está vacío.");
+        } else {
+            System.out.println("\n--- INVENTARIO ACTUAL ---");
+            for (Producto p : inventario) {
+                System.out.println(p);
+            }
+        }
+    }
 }
