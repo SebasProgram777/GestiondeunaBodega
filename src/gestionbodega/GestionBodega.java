@@ -21,7 +21,8 @@ public class GestionBodega {
             System.out.println("\n--- MENU PRINCIPAL ---");
             System.out.println("1. Registrar usuario");
             System.out.println("2. Iniciar sesion");
-            System.out.println("3. Salir");
+            System.out.println("3. Gestión de usuarios");
+            System.out.println("4. Salir");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
@@ -33,13 +34,16 @@ public class GestionBodega {
                 case 2:
                     iniciarSesion();
                     break;
-                case 3:
+                    case 3:
+                    menuGestionUsuarios();
+                    break;
+                case 4:
                     System.out.println("Saliendo del sistema...");
                     break;
                 default:
                     System.out.println("Opcion inválida.");
             }
-        } while (opcion != 3);
+        } while (opcion != 4);
     }
 
     public static void registrarUsuario() {
@@ -83,6 +87,7 @@ public class GestionBodega {
             System.out.println("3. Actualizar producto");
             System.out.println("4. Eliminar producto");
             System.out.println("5. Consultar producto");
+            System.out.println("6. Ver estadísticas del inventario");
             System.out.println("0. Cerrar sesión y volver al menú principal");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
@@ -103,6 +108,9 @@ public class GestionBodega {
                     break;
                 case 5:
                     consultarProducto();
+                    break;
+                case 6:
+                    mostrarEstadisticasInventario();
                     break;
                 case 0:
                     System.out.println("Cerrando sesión...");
@@ -203,5 +211,80 @@ public class GestionBodega {
         }
 
         System.out.println("Producto no encontrado.");
+    }
+    public static void menuGestionUsuarios() {
+        int opcion;
+        do {
+            System.out.println("\n--- GESTIÓN DE USUARIOS ---");
+            System.out.println("1. Ver usuarios registrados");
+            System.out.println("2. Eliminar usuario");
+            System.out.println("0. Volver al menú principal");
+            System.out.print("Elige una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
+
+            switch (opcion) {
+                case 1:
+                    verUsuarios();
+                    break;
+                case 2:
+                    eliminarUsuario();
+                    break;
+                case 0:
+                    System.out.println("Volviendo al menú principal...");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (opcion != 0);
+    }
+
+    public static void verUsuarios() {
+        if (listaUsuarios.isEmpty()) {
+            System.out.println("No hay usuarios registrados.");
+        } else {
+            System.out.println("\nUsuarios registrados:");
+            for (Usuario u : listaUsuarios) {
+                System.out.println("- " + u.getNombreUsuario());
+            }
+        }
+    }
+
+    public static void eliminarUsuario() {
+        System.out.print("Nombre del usuario a eliminar: ");
+        String nombre = scanner.nextLine();
+
+        for (int i = 0; i < listaUsuarios.size(); i++) {
+            if (listaUsuarios.get(i).getNombreUsuario().equalsIgnoreCase(nombre)) {
+                listaUsuarios.remove(i);
+                System.out.println("Usuario eliminado correctamente.");
+                return;
+            }
+        }
+
+        System.out.println("Usuario no encontrado.");
+    }
+    public static void mostrarEstadisticasInventario() {
+        if (inventario.isEmpty()) {
+            System.out.println("El inventario está vacío.");
+            return;
+        }
+
+        Producto mayor = inventario.get(0);
+        Producto menor = inventario.get(0);
+        double suma = 0;
+
+        for (Producto p : inventario) {
+            if (p.getCantidad() > mayor.getCantidad()) mayor = p;
+            if (p.getCantidad() < menor.getCantidad()) menor = p;
+            suma += p.getCantidad();
+        }
+
+        double promedio = suma / inventario.size();
+
+        System.out.println("\n--- ESTADÍSTICAS DEL INVENTARIO ---");
+        System.out.println("Producto con mayor cantidad: " + mayor.getNombre() + " (" + mayor.getCantidad() + ")");
+        System.out.println("Producto con menor cantidad: " + menor.getNombre() + " (" + menor.getCantidad() + ")");
+        System.out.printf("Promedio de cantidades: %.2f\n", promedio);
     }
 }
