@@ -12,9 +12,9 @@ public class GestionBodega {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        
         mostrarMenuPrincipal();
     }
+
     public static void mostrarMenuPrincipal() {
         int opcion;
         do {
@@ -80,6 +80,9 @@ public class GestionBodega {
             System.out.println("\n--- GESTIÓN DE BODEGAS ---");
             System.out.println("1. Ingresar nuevo producto");
             System.out.println("2. Ver inventario actual");
+            System.out.println("3. Actualizar producto");
+            System.out.println("4. Eliminar producto");
+            System.out.println("5. Consultar producto");
             System.out.println("0. Cerrar sesión y volver al menú principal");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
@@ -92,6 +95,15 @@ public class GestionBodega {
                 case 2:
                     verInventario();
                     break;
+                case 3:
+                    actualizarProducto();
+                    break;
+                case 4:
+                    eliminarProducto();
+                    break;
+                case 5:
+                    consultarProducto();
+                    break;
                 case 0:
                     System.out.println("Cerrando sesión...");
                     break;
@@ -100,6 +112,7 @@ public class GestionBodega {
             }
         } while (opcion != 0);
     }
+
     public static void ingresarProducto() {
         System.out.print("Nombre del producto: ");
         String nombre = scanner.nextLine();
@@ -123,6 +136,7 @@ public class GestionBodega {
             System.out.println("Error: Ingresa una cantidad válida como 1, 2.5 o 2k.");
         }
     }
+
     public static void verInventario() {
         if (inventario.isEmpty()) {
             System.out.println("El inventario está vacío.");
@@ -132,5 +146,62 @@ public class GestionBodega {
                 System.out.println(p);
             }
         }
+    }
+
+    public static void actualizarProducto() {
+        System.out.print("Nombre del producto a actualizar: ");
+        String nombre = scanner.nextLine();
+
+        for (Producto p : inventario) {
+            if (p.getNombre().equalsIgnoreCase(nombre)) {
+                System.out.print("Nueva cantidad (ej: 1, 2.5, 2k): ");
+                String entrada = scanner.nextLine().toLowerCase().replace(",", ".");
+                double cantidad;
+                try {
+                    if (entrada.endsWith("k")) {
+                        cantidad = Double.parseDouble(entrada.replace("k", "")) * 1000;
+                    } else {
+                        cantidad = Double.parseDouble(entrada);
+                    }
+                    p.setCantidad(cantidad);
+                    System.out.println("Producto actualizado correctamente.");
+                    return;
+                } catch (NumberFormatException e) {
+                    System.out.println("Cantidad inválida.");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Producto no encontrado.");
+    }
+
+    public static void eliminarProducto() {
+        System.out.print("Nombre del producto a eliminar: ");
+        String nombre = scanner.nextLine();
+
+        for (int i = 0; i < inventario.size(); i++) {
+            if (inventario.get(i).getNombre().equalsIgnoreCase(nombre)) {
+                inventario.remove(i);
+                System.out.println("Producto eliminado correctamente.");
+                return;
+            }
+        }
+
+        System.out.println("Producto no encontrado.");
+    }
+
+    public static void consultarProducto() {
+        System.out.print("Nombre del producto a consultar: ");
+        String nombre = scanner.nextLine();
+
+        for (Producto p : inventario) {
+            if (p.getNombre().equalsIgnoreCase(nombre)) {
+                System.out.println("Producto encontrado: " + p);
+                return;
+            }
+        }
+
+        System.out.println("Producto no encontrado.");
     }
 }
