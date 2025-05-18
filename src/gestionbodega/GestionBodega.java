@@ -218,7 +218,8 @@ public class GestionBodega {
             System.out.println("\n--- GESTIÓN DE USUARIOS ---");
             System.out.println("1. Ver usuarios registrados");
             System.out.println("2. Eliminar usuario");
-            System.out.println("0. Volver al menú principal");
+            System.out.println("3. Cambiar contraseña de usuario");
+            System.out.println("4. Volver al menú principal");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
@@ -230,14 +231,41 @@ public class GestionBodega {
                 case 2:
                     eliminarUsuario();
                     break;
-                case 0:
+                case 3:
+                    cambiarContraseñaUsuario();
+                    break;
+                case 4:
                     System.out.println("Volviendo al menú principal...");
                     break;
                 default:
                     System.out.println("Opción inválida.");
             }
-        } while (opcion != 0);
+        } while (opcion != 4);
     }
+
+    //Metodo para cambiar la contraseña de un usuario
+    //Se solicita el ingreso del nombre de usuario y la contraseña actual para su modificación
+    public static void cambiarContraseñaUsuario() {
+    System.out.print("Nombre de usuario: ");
+    String nombre = scanner.nextLine();
+    System.out.print("Contraseña actual: ");
+    String contraseñaActual = scanner.nextLine();
+
+    boolean encontrado = false;
+    for (Usuario u : listaUsuarios) {
+        if (u.getNombreUsuario().equalsIgnoreCase(nombre) && u.getContraseña().equals(contraseñaActual)) {
+            System.out.print("Nueva contraseña: ");
+            String nuevaContraseña = scanner.nextLine();
+            u.setContraseña(nuevaContraseña);
+            System.out.println("Contraseña actualizada correctamente.");
+            encontrado = true;
+            break;
+        }
+    }
+    if (!encontrado) {
+        System.out.println("Nombre de usuario o contraseña incorrectos. No se puede cambiar la contraseña.");
+    }
+}
 
     public static void verUsuarios() {
         if (listaUsuarios.isEmpty()) {
