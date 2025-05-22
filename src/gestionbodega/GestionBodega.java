@@ -88,6 +88,7 @@ public class GestionBodega {
             System.out.println("4. Eliminar producto");
             System.out.println("5. Consultar producto");
             System.out.println("6. Ver estadísticas del inventario");
+            System.out.println("7. Aumentar stock de un producto");
             System.out.println("0. Cerrar sesión y volver al menú principal");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
@@ -111,6 +112,9 @@ public class GestionBodega {
                     break;
                 case 6:
                     mostrarEstadisticasInventario();
+                    break;
+                case 7:
+                    aumentarStockProducto();
                     break;
                 case 0:
                     System.out.println("Cerrando sesión...");
@@ -292,6 +296,7 @@ public class GestionBodega {
 
         System.out.println("Usuario no encontrado.");
     }
+
     public static void mostrarEstadisticasInventario() {
         if (inventario.isEmpty()) {
             System.out.println("El inventario está vacío.");
@@ -314,5 +319,33 @@ public class GestionBodega {
         System.out.println("Producto con mayor cantidad: " + mayor.getNombre() + " (" + mayor.getCantidad() + ")");
         System.out.println("Producto con menor cantidad: " + menor.getNombre() + " (" + menor.getCantidad() + ")");
         System.out.printf("Promedio de cantidades: %.2f\n", promedio);
+    }
+    
+    public static void aumentarStockProducto() {
+        System.out.print("Nombre del producto a aumentar stock: ");
+        String nombre = scanner.nextLine();
+
+        for (Producto p : inventario) {
+            if (p.getNombre().equalsIgnoreCase(nombre)) {
+                System.out.print("Cantidad a aumentar (ej: 1, 2.5, 2k): ");
+                String entrada = scanner.nextLine().toLowerCase().replace(",", ".");
+                double cantidad;
+                try {
+                    if (entrada.endsWith("k")) {
+                        cantidad = Double.parseDouble(entrada.replace("k", "")) * 1000;
+                    } else {
+                        cantidad = Double.parseDouble(entrada);
+                    }
+                    p.setCantidad(p.getCantidad() + cantidad);
+                    System.out.println("Stock aumentado correctamente.");
+                    return;
+                } catch (NumberFormatException e) {
+                    System.out.println("Cantidad inválida.");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Producto no encontrado.");
     }
 }
