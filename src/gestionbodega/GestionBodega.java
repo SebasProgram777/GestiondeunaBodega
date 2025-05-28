@@ -89,6 +89,7 @@ public class GestionBodega {
             System.out.println("5. Consultar producto");
             System.out.println("6. Ver estadísticas del inventario");
             System.out.println("7. Aumentar stock de un producto");
+            System.out.println("8. Reducir stock de un producto");
             System.out.println("0. Cerrar sesión y volver al menú principal");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
@@ -116,6 +117,8 @@ public class GestionBodega {
                 case 7:
                     aumentarStockProducto();
                     break;
+                case 8:
+                    reducirStockProducto();
                 case 0:
                     System.out.println("Cerrando sesión...");
                     break;
@@ -338,6 +341,34 @@ public class GestionBodega {
                     }
                     p.setCantidad(p.getCantidad() + cantidad);
                     System.out.println("Stock aumentado correctamente.");
+                    return;
+                } catch (NumberFormatException e) {
+                    System.out.println("Cantidad inválida.");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Producto no encontrado.");
+    }
+    
+    public static void reducirStockProducto() {
+        System.out.print("Nombre del producto a reducir stock: ");
+        String nombre = scanner.nextLine();
+
+        for (Producto p : inventario) {
+            if (p.getNombre().equalsIgnoreCase(nombre)) {
+                System.out.print("Cantidad a reducir (ej: 1, 2.5, 2k): ");
+                String entrada = scanner.nextLine().toLowerCase().replace(",", ".");
+                double cantidad;
+                try {
+                    if (entrada.endsWith("k")) {
+                        cantidad = Double.parseDouble(entrada.replace("k", "")) * 1000;
+                    } else {
+                        cantidad = Double.parseDouble(entrada);
+                    }
+                    p.setCantidad(p.getCantidad() - cantidad);
+                    System.out.println("Stock reducido correctamente.");
                     return;
                 } catch (NumberFormatException e) {
                     System.out.println("Cantidad inválida.");
