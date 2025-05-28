@@ -11,9 +11,11 @@ package gestionbodega;
 public class Producto {
     private String nombre;
     private double cantidad;
-    public Producto(String nombre, double cantidad) {
+    private double precio;
+    public Producto(String nombre, double cantidad, double precio) {
         this.nombre = nombre;
         this.cantidad = cantidad;
+        this.precio = precio;
     }
     public String getNombre() {
         return nombre;
@@ -24,8 +26,14 @@ public class Producto {
     public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
+    public double getPrecio() {
+        return precio;
+    }
+    public void setPrecio(double precio){
+        this.precio = precio;
+    }
     @Override
     public String toString() {
-        return "Producto: " + nombre + " | Cantidad: " + cantidad;
+        return "Producto: " + nombre + " | Cantidad: " + cantidad + " | Precio por unidad: " + precio + " S/.";
     }
 }

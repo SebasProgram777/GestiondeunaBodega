@@ -134,18 +134,26 @@ public class GestionBodega {
 
         System.out.print("Cantidad (ej: 1, 2.5, 2k, 1.5k): ");
         String entrada = scanner.nextLine().toLowerCase().replace(",", ".");
+        
+        System.out.print("Precio por unidad en S/.: ");
+        String costo = scanner.nextLine().toLowerCase().replace(",", ".");
 
         double cantidad;
+        double precio;
 
         try {
-            if (entrada.endsWith("k")) {
+            if (entrada.endsWith("k") && costo.endsWith("k")) {
                 String numStr = entrada.replace("k", "");
                 cantidad = Double.parseDouble(numStr) * 1000;
+                String numCos = costo.replace("k", "");
+                precio = Double.parseDouble(numCos) * 1000;
+                
             } else {
                 cantidad = Double.parseDouble(entrada);
+                precio = Double.parseDouble(costo);
             }
 
-            inventario.add(new Producto(nombre, cantidad));
+            inventario.add(new Producto(nombre, cantidad, precio));
             System.out.println("Producto agregado correctamente al inventario.");
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingresa una cantidad válida como 1, 2.5 o 2k.");
@@ -171,13 +179,19 @@ public class GestionBodega {
             if (p.getNombre().equalsIgnoreCase(nombre)) {
                 System.out.print("Nueva cantidad (ej: 1, 2.5, 2k): ");
                 String entrada = scanner.nextLine().toLowerCase().replace(",", ".");
+                System.out.print("Nuevo precio por unidad (en S/.): ");
+                String costo = scanner.nextLine().toLowerCase().replace(",", ".");
                 double cantidad;
+                double precio;
                 try {
-                    if (entrada.endsWith("k")) {
+                    if (entrada.endsWith("k")&& costo.endsWith("k")) {
                         cantidad = Double.parseDouble(entrada.replace("k", "")) * 1000;
+                        precio = Double.parseDouble(costo.replace("k", "")) * 1000;
                     } else {
+                        precio = Double.parseDouble(costo);
                         cantidad = Double.parseDouble(entrada);
                     }
+                    p.setPrecio(precio);
                     p.setCantidad(cantidad);
                     System.out.println("Producto actualizado correctamente.");
                     return;
