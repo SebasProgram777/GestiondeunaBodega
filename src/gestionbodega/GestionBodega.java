@@ -5,12 +5,19 @@
 package gestionbodega;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalTime;
+import java.time.LocalDate;
 
 public class GestionBodega {
     private static ArrayList<Producto> inventario = new ArrayList<>();
+    private static ArrayList<Producto> bodega = new ArrayList<>();
     private static ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
+    private static int hora2;
+    private static int minute;
+    private static String amPm;
 
+    
     public static void main(String[] args) {
         mostrarMenuPrincipal();
     }
@@ -90,6 +97,8 @@ public class GestionBodega {
             System.out.println("6. Ver estadísticas del inventario");
             System.out.println("7. Aumentar stock de un producto");
             System.out.println("8. Reducir stock de un producto");
+            System.out.println("9. Ver fecha y hora");
+            System.out.println("10. Ver el valor del inventario actual");
             System.out.println("0. Cerrar sesión y volver al menú principal");
             System.out.print("Elige una opción: ");
             opcion = scanner.nextInt();
@@ -119,6 +128,12 @@ public class GestionBodega {
                     break;
                 case 8:
                     reducirStockProducto();
+                case 9:
+                    mostrarHorayFechaActual();
+                    break;
+                case 10:
+                    valorInventario();
+                    break;
                 case 0:
                     System.out.println("Cerrando sesión...");
                     break;
@@ -137,6 +152,9 @@ public class GestionBodega {
         
         System.out.print("Precio por unidad en S/.: ");
         String costo = scanner.nextLine().toLowerCase().replace(",", ".");
+        
+        System.out.print("Marca del producto: ");
+        String marca = scanner.nextLine();
 
         double cantidad;
         double precio;
@@ -153,7 +171,7 @@ public class GestionBodega {
                 precio = Double.parseDouble(costo);
             }
 
-            inventario.add(new Producto(nombre, cantidad, precio));
+            inventario.add(new Producto(nombre, marca, cantidad, precio));
             System.out.println("Producto agregado correctamente al inventario.");
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingresa una cantidad válida como 1, 2.5 o 2k.");
@@ -392,5 +410,50 @@ public class GestionBodega {
         }
 
         System.out.println("Producto no encontrado.");
+    }
+    
+    public static void mostrarHorayFechaActual() {
+        LocalDate today = LocalDate.now();
+        int año = today.getYear();
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+        today.getDayOfWeek();
+        LocalTime now = LocalTime.now();
+        hora2 = now.getHour();
+        minute = now.getMinute();
+        int segundo = now.getSecond();
+        String amPm;
+        if (hora2 >= 12) {
+            amPm = "PM";
+        } else {
+            amPm = "AM";
+        }
+        if (hora2 > 12){
+            hora2 = hora2-12;
+        }else if(hora2==0){
+            hora2=12;
+        }
+        System.out.println("Hora actual: "+ hora2+" : "+ minute+ " : " +segundo+ " : " + amPm);
+        System.out.println("Fecha actual: "+today.getDayOfWeek()+" "+day+"/"+month+"/"+año);
+    }
+    
+    public static void valorInventario(){
+        int contador = 0;
+        double valor = 0;
+        for (Producto p: inventario){
+            valor += p.getCantidad() * p.getPrecio();
+        }
+        for (Producto p : inventario){
+            contador++;
+        }
+        Producto masCaro = inventario.get(0);
+        for(Producto p : inventario){
+            if(p.getPrecio() > masCaro.getPrecio()){
+                masCaro = p;
+            }
+        }
+        System.out.println("El inventario cuenta con la siguiente cantidad de productos : "+ contador);
+        System.out.println("El producto de mayor valor encontrado es "+ masCaro.getNombre() +" - S/."+ masCaro.getPrecio());
+        System.out.println("El valor total del inventario actual es de : S/."+ valor);
     }
 }
